@@ -6,7 +6,11 @@ from selenium.common.exceptions import TimeoutException
 
 class AvailablityChecker:
     def __init__(self, url):
-        self.driver = webdriver.Chrome()
+        # Set the options for Chrome driver
+        options = webdriver.ChromeOptions()
+        options.add_argument('--headless')
+
+        self.driver = webdriver.Chrome(options = options)
         self.url = url
 
     def check_availability(self):
