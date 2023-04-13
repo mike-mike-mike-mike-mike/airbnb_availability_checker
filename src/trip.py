@@ -10,6 +10,6 @@ class Trip:
     
     def is_available(self):
         return AvailablityChecker(self.__url()).check_availability()
-
+    
     def __url(self):
         return UrlBuilder(self.room_id, self.check_in, self.check_out, self.guests).build()

@@ -7,6 +7,7 @@ class UrlBuilder:
         self.check_out = check_out
         self.guests = guests
 
+    # e.g. https://www.airbnb.com/rooms/50617365?check_in=2023-07-02&check_out=2023-07-06&adults=2
     def build(self):
         check_in_param = f'check_in={self.check_in}'
         check_out_param = f'check_out={self.check_out}'
