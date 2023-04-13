@@ -161,3 +161,4 @@ cython_debug/
 
 # macOS specific
 .DS_Store
+src/data/results.csv
