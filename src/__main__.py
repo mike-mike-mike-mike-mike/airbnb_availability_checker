@@ -1,6 +1,8 @@
 import os.path as path
 from file.trip_loader import TripLoader
 from file.results_file_io import ResultsFileHandler
+from util.notifications import NewAvailabilityNotifier
+from config import secrets
 
 def main():
     base_dir = path.dirname(__file__)
@@ -13,6 +15,8 @@ def main():
     results_file_handler = ResultsFileHandler(results_file)
     results = results_file_handler.read()
     
+    notifier = NewAvailabilityNotifier('sms')
+
     for trip in trips:
         was_previously_available = results.get(trip.trip_id) == 'True'
         print(f"Checking availability for {trip.room_id}...")
@@ -25,9 +29,10 @@ def main():
             f"available for {trip.check_in} to {trip.check_out}"
         )
 
-        # if is_available_now and not was_previously_available:
-            # print(f"Room {trip.room_id} is now available!")
-            # trip.send_new_availability_email()
+        if is_available_now and not was_previously_available:
+            print(f"Room {trip.room_id} is now available!")
+            print(f"Sending notification to {secrets.notifications_phone_number()}...")
+            print(notifier.notify(trip))
     
     # Write new results to file
     results_file_handler.write(results)
