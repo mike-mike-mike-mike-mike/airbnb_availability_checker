@@ -18,4 +18,9 @@ def twilio_msg_service_sid():
 
 def notifications_phone_number():
   return secrets()['NOTIFICATIONS_PHONE_NUMBER']
+
+# def notifications_email():
+#   return secrets()['NOTIFICATIONS_EMAIL']
     
+# def notifications_email_password():
+#   return secrets()['NOTIFICATIONS_EMAIL_PASSWORD']

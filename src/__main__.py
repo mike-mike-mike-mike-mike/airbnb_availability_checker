@@ -1,7 +1,7 @@
 import os.path as path
 from file.trip_loader import TripLoader
 from file.results_file_io import ResultsFileHandler
-from util.notifications import NewAvailabilityNotifier
+from util.notifications import NewAvailabilityNotifierFactory
 from config import secrets
 
 def main():
@@ -15,7 +15,7 @@ def main():
     results_file_handler = ResultsFileHandler(results_file)
     results = results_file_handler.read()
     
-    notifier = NewAvailabilityNotifier('sms')
+    notifier = NewAvailabilityNotifierFactory.get_notifier('sms')
 
     for trip in trips:
         was_previously_available = results.get(trip.trip_id) == 'True'

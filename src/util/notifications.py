@@ -1,39 +1,77 @@
 from config import secrets
 from twilio.rest import Client
+from twilio.rest import Client
+import smtplib
+from email.message import EmailMessage
+from email.utils import formataddr
 
-class NewAvailabilityNotifier:
-    VALID_NOTIFICATION_METHODS = ['sms', 'email']
+class BaseNotifier:
+    def notify(self, _trip):
+        raise NotImplementedError("Subclasses must implement this method")
     
-    def __init__(self, method):
-        if method not in self.VALID_NOTIFICATION_METHODS:
-            raise ValueError(f"Invalid notification method: {method}")
-        self.method = method
-        self.client = Client(secrets.twilio_account_sid(), secrets.twilio_auth_token())
+    def _build_body(self, trip):
+        return (
+            f"Hey this is your airbnb bot!\n\n"
+            f"Room {trip.room_id} is now available for {trip.check_in} to {trip.check_out}! "
+            f"Book now at {trip.url}!"
+        )
     
+class ConsoleNotifier(BaseNotifier):
     def notify(self, trip):
-        body = self.__build_body(trip)
+        print(super()._build_body(trip))
 
-        if self.method == 'sms':
-            message = self.client.messages.create(
-                messaging_service_sid= secrets.twilio_msg_service_sid(),
-                to = secrets.notifications_phone_number(),
-                body = body
-            )
+# class EmailNotifier(BaseNotifier):
+#     def notify(self, trip):
+#         email_address = secrets.notifications_email()
+#         to = email_address
+#         subject = 'The Airbnb you are watching is now available!'
+#         body = super()._build_body(trip)
     
-            return message.sid
-        elif self.method == 'email':
-            # TODO
-            pass
+#         from_name = 'Airbnb Availability Bot'
+#         from_email = email_address
+#         password = secrets.notifications_email_password()
+
+#         msg = EmailMessage()
+#         msg.set_content(body)
+#         msg['To'] = to
+#         msg['Subject'] = subject
+#         msg['From'] = formataddr((from_name, from_email))
+
+#         with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
+#             smtp.login(from_email, password)
+#             smtp.send_message(msg)
+
+class SMSNotifier(BaseNotifier):
+    def notify(self, trip):
+        client =  Client(secrets.twilio_account_sid(), secrets.twilio_auth_token())
+        messaging_service_sid = secrets.twilio_msg_service_sid()
+        notifications_phone_number = secrets.notifications_phone_number()
+        body = self._build_body(trip)
+
+        message = client.messages.create(
+            messaging_service_sid= messaging_service_sid,
+            to = notifications_phone_number,
+            body = body
+        )
+
+        return message.sid
     
-    def __build_body(self, trip):
+    def _build_body(self, trip):
         # the trial version of twilio is giving me trouble with sending links
         return (
             f"Hey this is your airbnb bot!\n\n"
             f"Your trip to room {trip.room_id} from {trip.check_in} to {trip.check_out} is now available!"
         )
-        # return (
-        #     f"Hey this is your airbnb bot!\n\n"
-        #     f"Room {trip.room_id} is now available for "
-        #     f"{trip.check_in} to {trip.check_out}! "
-        #     f"Book now at {trip.url}!"
-        # )
+
+class NewAvailabilityNotifierFactory:
+    VALID_NOTIFICATION_METHODS = ['sms', 'email', 'console']
+
+    @staticmethod
+    def get_notifier(method):
+        if method == 'sms':
+            return SMSNotifier()
+        elif method == 'email':
+            # return EmailNotifier()
+            pass
+        else:
+            raise ValueError(f"Invalid notification method: {method}")
