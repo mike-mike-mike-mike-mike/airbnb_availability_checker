@@ -1,5 +1,5 @@
 from util.url_builder import UrlBuilder
-from web.availability_checker import AvailablityChecker
+from web.trip_page_parser import TripPageParser
 
 class Trip:
     def __init__(self, room_id, check_in, check_out):
@@ -8,9 +8,10 @@ class Trip:
         self.check_out = check_out
         self.url = self.__url()
         self.trip_id = self.__trip_id()
-    
-    def is_available(self):
-        return AvailablityChecker(self.url).check_availability()
+
+        trip_page_parser = TripPageParser(self.url)
+        self.is_available = trip_page_parser.check_availability()
+        self.room_name = trip_page_parser.get_room_name()
     
     def __trip_id(self):
         return f'{self.room_id}_{self.check_in}_{self.check_out}'

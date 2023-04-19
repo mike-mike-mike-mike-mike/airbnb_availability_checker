@@ -21,7 +21,7 @@ def main():
         was_previously_available = results.get(trip.trip_id) == 'True'
         print(f"Checking availability for {trip.room_id}...")
 
-        is_available_now = trip.is_available()
+        is_available_now = trip.is_available
         results[trip.trip_id] = is_available_now
 
         print(

@@ -12,7 +12,7 @@ class BaseNotifier:
     def _build_body(self, trip):
         return (
             f"Hey this is your airbnb bot!\n\n"
-            f"Room {trip.room_id} is now available for {trip.check_in} to {trip.check_out}! "
+            f"'{trip.room_name}' is now available for {trip.check_in} to {trip.check_out}! "
             f"Book now at {trip.url}!"
         )
     
@@ -60,7 +60,8 @@ class SMSNotifier(BaseNotifier):
         # the trial version of twilio is giving me trouble with sending links
         return (
             f"Hey this is your airbnb bot!\n\n"
-            f"Your trip to room {trip.room_id} from {trip.check_in} to {trip.check_out} is now available!"
+            f"'{trip.room_name}' is now available for {trip.check_in} to {trip.check_out}! "
+            f"Room ID: {trip.room_id}"
         )
 
 class NewAvailabilityNotifierFactory:
@@ -73,5 +74,7 @@ class NewAvailabilityNotifierFactory:
         elif method == 'email':
             # return EmailNotifier()
             pass
+        elif method == 'console':
+            return ConsoleNotifier()
         else:
             raise ValueError(f"Invalid notification method: {method}")
