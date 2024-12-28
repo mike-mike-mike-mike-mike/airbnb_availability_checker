@@ -5,6 +5,7 @@ from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException
 from functools import lru_cache
 
+
 class TripPageParser:
     def __init__(self, url, driver=None):
         if driver:
@@ -12,8 +13,8 @@ class TripPageParser:
         else:
             # Set the options for Chrome driver
             options = webdriver.ChromeOptions()
-            options.add_argument('--headless')
-            self.driver = webdriver.Chrome(options = options)
+            options.add_argument("--headless")
+            self.driver = webdriver.Chrome(options=options)
 
         self.url = url
         self.driver.get(self.url)
@@ -23,17 +24,21 @@ class TripPageParser:
     def check_availability(self):
         # Wait for the element containing availability status to be present on the page
         try:
-            element = self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '#bookItTripDetailsError')))
-            
-            if element and 'Those dates are not available' in element.text:
+            element = self.wait.until(
+                EC.presence_of_element_located(
+                    (By.CSS_SELECTOR, "#bookItTripDetailsError")
+                )
+            )
+
+            if element and "Those dates are not available" in element.text:
                 return False
         except TimeoutException:
             return True
-        
+
     @lru_cache(maxsize=None)
     def get_room_name(self):
         # Wait for the header element to be present on the page
         try:
-            return self.wait.until(EC.presence_of_element_located((By.TAG_NAME, 'h1')))
+            return self.wait.until(EC.presence_of_element_located((By.TAG_NAME, "h1")))
         except TimeoutException:
-            raise Exception('Could not find room name')
+            raise Exception("Could not find room name")

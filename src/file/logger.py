@@ -1,5 +1,5 @@
-from file.project_paths import *
 from datetime import datetime
+
 
 class Logger:
     def __init__(self, log_path):

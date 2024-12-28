@@ -165,3 +165,4 @@ src/data/results.csv
 src/scratch.py
 src/data/log.txt
 TODO.txt
+.DS_Store
