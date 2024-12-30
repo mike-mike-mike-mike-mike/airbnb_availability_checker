@@ -5,20 +5,20 @@ from email.utils import formataddr
 
 
 class BaseNotifier:
-    def notify(self, _trip):
+    def notify(self, _trip, _room_name):
         raise NotImplementedError("Subclasses must implement this method")
 
-    def _build_body(self, trip):
+    def _build_body(self, trip, room_name):
         return (
             f"Hey this is your airbnb bot!\n\n"
-            f"'{trip.room_name}' is now available for {trip.check_in} to {trip.check_out}! "
+            f"'{room_name}' is now available for {trip.check_in} to {trip.check_out}! "
             f"Book now at {trip.url}!"
         )
 
 
 class ConsoleNotifier(BaseNotifier):
-    def notify(self, trip):
-        print(super()._build_body(trip))
+    def notify(self, trip, room_name):
+        print(super()._build_body(trip, room_name))
 
 
 # class EmailNotifier(BaseNotifier):
@@ -44,40 +44,45 @@ class ConsoleNotifier(BaseNotifier):
 
 
 class SMSNotifier(BaseNotifier):
-    def notify(self, trip):
-        client = Client(secrets.twilio_account_sid(), secrets.twilio_auth_token())
-        messaging_service_sid = secrets.twilio_msg_service_sid()
-        notifications_phone_number = secrets.notifications_phone_number()
-        body = self._build_body(trip)
+    def __init__(self):
+        self.client = Client(secrets.twilio_account_sid(), secrets.twilio_auth_token())
+        self.messaging_service_sid = secrets.twilio_msg_service_sid()
+        self.notifications_phone_number = secrets.notifications_phone_number()
 
-        message = client.messages.create(
-            messaging_service_sid=messaging_service_sid,
-            to=notifications_phone_number,
+    def notify(self, trip, room_name):
+        body = self._build_body(trip, room_name)
+
+        message = self.client.messages.create(
+            messaging_service_sid=self.messaging_service_sid,
+            to=self.notifications_phone_number,
             body=body,
         )
 
         return message.sid
 
-    def _build_body(self, trip):
+    def _build_body(self, trip, room_name):
         # the trial version of twilio is giving me trouble with sending links
         return (
             f"Hey this is your airbnb bot!\n\n"
-            f"'{trip.room_name}' is now available for {trip.check_in} to {trip.check_out}! "
+            f"'{room_name}' is now available for {trip.check_in} to {trip.check_out}! "
             f"Room ID: {trip.room_id}"
         )
 
 
 class NewAvailabilityNotifierFactory:
-    VALID_NOTIFICATION_METHODS = ["sms", "email", "console"]
+    class NotifierType:
+        SMS = "sms"
+        EMAIL = "email"
+        CONSOLE = "console"
 
     @staticmethod
     def get_notifier(method):
-        if method == "sms":
+        if method == NewAvailabilityNotifierFactory.NotifierType.SMS:
             return SMSNotifier()
-        elif method == "email":
+        elif method == NewAvailabilityNotifierFactory.NotifierType.EMAIL:
             # return EmailNotifier()
             pass
-        elif method == "console":
+        elif method == NewAvailabilityNotifierFactory.NotifierType.CONSOLE:
             return ConsoleNotifier()
         else:
             raise ValueError(f"Invalid notification method: {method}")

@@ -4,17 +4,21 @@ from file.trip_loader import TripLoader
 from file.results_file_io import ResultsFileHandler
 from util.notifications import NewAvailabilityNotifierFactory
 from config import secrets
-from web.trip_page_parser import SeleniumTripPageParser
+from web.trip_page_parser import TripPageParserFactory
 
 
 class CheckAvailabilitiesJob:
     def perform(self):
         trips = TripLoader(TRIPS_FILE).load()
-        trip_page_parser = SeleniumTripPageParser()
+        trip_page_parser = TripPageParserFactory.get_parser(
+            TripPageParserFactory.ParserType.PLAYWRIGHT
+        )
         logger = Logger(LOG_FILE)
         results_file_handler = ResultsFileHandler(RESULTS_FILE)
         results = results_file_handler.read()
-        notifier = NewAvailabilityNotifierFactory.get_notifier("sms")
+        notifier = NewAvailabilityNotifierFactory.get_notifier(
+            NewAvailabilityNotifierFactory.NotifierType.CONSOLE
+        )
 
         for trip in trips:
             was_previously_available = results.get(trip.trip_id) == "True"
@@ -38,7 +42,9 @@ class CheckAvailabilitiesJob:
                 print(
                     f"Sending notification to {secrets.notifications_phone_number()}..."
                 )
-                print(notifier.notify(trip))
+                print(notifier.notify(trip, room_name))
 
             # Write new results to file
             results_file_handler.write(results)
+
+        trip_page_parser.close()
