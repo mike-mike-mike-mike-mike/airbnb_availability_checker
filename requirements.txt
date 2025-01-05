@@ -13,6 +13,7 @@ certifi==2024.12.14
 charset-normalizer==3.1.0
 decorator==5.1.1
 Django==5.1.4
+django-phonenumber-field==8.0.0
 docopt==0.6.2
 exceptiongroup==1.1.1
 executing==2.1.0
@@ -31,6 +32,7 @@ outcome==1.2.0
 parso==0.8.4
 pdbpp==0.10.3
 pexpect==4.9.0
+phonenumbers==8.13.52
 pipreqs==0.4.12
 playwright==1.49.1
 prompt_toolkit==3.0.48

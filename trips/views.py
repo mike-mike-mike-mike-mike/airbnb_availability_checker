@@ -1,8 +1,8 @@
 from django.views import generic
-from django.contrib.auth.models import User
 
 from .models import Trip
 from .forms import TripForm
+from users.models import User
 
 
 class IndexView(generic.ListView):

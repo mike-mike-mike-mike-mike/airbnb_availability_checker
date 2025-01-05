@@ -1,5 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import User
+
+from app.settings import AUTH_USER_MODEL
 
 
 class Trip(models.Model):
@@ -8,7 +9,7 @@ class Trip(models.Model):
     check_out = models.DateField()
     available = models.BooleanField(default=False)
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     @property
     def trip_id(self):

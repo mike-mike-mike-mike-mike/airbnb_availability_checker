@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
 from trips.models import Trip, RoomDetail
-from django.contrib.auth.models import User
+from users.models import User
 
 
 class TripModelTests(TestCase):
