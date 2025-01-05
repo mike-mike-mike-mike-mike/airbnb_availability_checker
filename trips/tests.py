@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.urls import reverse
 from trips.models import Trip, RoomDetail
 from django.contrib.auth.models import User
 
@@ -41,3 +42,14 @@ class RoomDetailModelTests(TestCase):
             str(room_detail),
             "RoomDetail(room_id: 123, display_name: a very long name that is over 32...)",
         )
+
+
+class TripListViewTests(TestCase):
+    def test_no_trips(self):
+        """
+        If no trips exist, an appropriate message is displayed.
+        """
+        response = self.client.get(reverse("trips:trip_list"))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "No saved trips.")
+        self.assertQuerySetEqual(response.context["trip_list"], [])
