@@ -1,9 +1,0 @@
-{% if latest_trips %}
-    <ul>
-    {% for trip in latest_trips %}
-        <li><a href="{% url 'trips:show' trip.id %}">{{ trip.trip_id }}</a></li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>No saved trips.</p>
-{% endif %}

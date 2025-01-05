@@ -1,19 +1,15 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import get_object_or_404
 from django.urls import reverse
+from django.views import generic
 
 
 from .models import Trip
 
 
-def index(request):
-    latest_trips = Trip.objects.order_by("-id")[:5]
-    context = {
-        "latest_trips": latest_trips,
-    }
-
-    return render(request, "trips/index.html", context)
+class IndexView(generic.ListView):
+    def get_queryset(self):
+        return Trip.objects.order_by("-id")[:5]
 
 
 def new(request, error_message=None):
@@ -21,7 +17,6 @@ def new(request, error_message=None):
 
 
 def create(request):
-    # return HttpResponse("You're creating a new trip")
     try:
         room_id = request.POST["room_id"]
         check_in = request.POST["check_in"]
@@ -36,9 +31,8 @@ def create(request):
         return new(request, error_message=str(e))
 
 
-def show(request, trip_id):
-    trip = get_object_or_404(Trip, pk=trip_id)
-    return render(request, "trips/show.html", {"trip": trip})
+class DetailsView(generic.DetailView):
+    model = Trip
 
 
 def edit(request, trip_id):
