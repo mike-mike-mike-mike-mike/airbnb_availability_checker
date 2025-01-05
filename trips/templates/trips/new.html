@@ -1,0 +1,18 @@
+<form action="{% url 'trips:create' %}" method="post">
+    {% csrf_token %}
+    <fieldset>
+        <legend><h1>New Trip</h1></legend>
+        {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+        {% comment %} {% for choice in question.choice_set.all %}
+            <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
+            <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br>
+        {% endfor %} {% endcomment %}
+        <label for="room_id">Room ID:</label>
+        <input type="text" name="room_id" id="room_id">
+        <label for="check_in">Check-in:</label>
+        <input type="date" name="check_in" id="check_in">
+        <label for="check_out">Check-out:</label>
+        <input type="date" name="check_out" id="check_out">
+    </fieldset>
+    <input type="submit" value="Create trip">
+    </form>
