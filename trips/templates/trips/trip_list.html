@@ -1,9 +1,11 @@
 {% if trip_list %}
     <ul>
     {% for trip in trip_list %}
-        <li><a href="{% url 'trips:details' trip.id %}">{{ trip.trip_id }}</a></li>
+        <li><a href="{% url 'trips:edit_trip' trip.id %}">{{ trip.trip_id }}</a></li>
     {% endfor %}
     </ul>
 {% else %}
     <p>No saved trips.</p>
 {% endif %}
+
+<a href="{% url 'trips:new_trip' %}">Add a trip</a>

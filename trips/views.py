@@ -1,39 +1,35 @@
-from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
-from django.urls import reverse
 from django.views import generic
-
+from django.contrib.auth.models import User
 
 from .models import Trip
+from .forms import TripForm
 
 
 class IndexView(generic.ListView):
     def get_queryset(self):
+        # TODO: filter by user once logging in is implemented
         return Trip.objects.order_by("-id")[:5]
 
 
-def new(request, error_message=None):
-    return render(request, "trips/new.html", {"error_message": error_message})
+class CreateView(generic.CreateView):
+    model = Trip
+    form_class = TripForm
+    template_name = "trips/new.html"
+    success_url = "/trips"
 
-
-def create(request):
-    try:
-        room_id = request.POST["room_id"]
-        check_in = request.POST["check_in"]
-        check_out = request.POST["check_out"]
-
-        trip = Trip(room_id=room_id, check_in=check_in, check_out=check_out)
-        trip.save()
-
-        return HttpResponseRedirect(reverse("trips:show", args=(trip.id)))
-    except Exception as e:
-        # re-render the new form with the error message
-        return new(request, error_message=str(e))
+    def form_valid(self, form):
+        # TODO: change this to request.user once logging in is implemented
+        form.instance.user = User.objects.first()
+        return super().form_valid(form)
 
 
 class DetailsView(generic.DetailView):
+    # TODO: 403 if user is not the owner of the trip
     model = Trip
 
 
-def edit(request, trip_id):
-    return HttpResponse(f"You're editing trip {trip_id}")
+class UpdateView(generic.UpdateView):
+    model = Trip
+    form_class = TripForm
+    template_name = "trips/edit.html"
+    success_url = "/trips"
