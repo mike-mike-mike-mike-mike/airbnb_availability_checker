@@ -1,3 +1,9 @@
+{% extends 'base.html' %}
+
+{% block page_title %}My Trips{% endblock %}
+
+{% block content %}
+
 {% if trip_list %}
     <ul>
     {% for trip in trip_list %}
@@ -9,3 +15,5 @@
 {% endif %}
 
 <a href="{% url 'trips:new_trip' %}">Add a trip</a>
+
+{% endblock %}

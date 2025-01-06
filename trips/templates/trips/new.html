@@ -1,6 +1,14 @@
+{% extends 'base.html' %}
+
+{% block page_title %}New trip{% endblock %}
+
+{% block content %}
+
 <h1>Add a trip</h1>
 <form method="post">{% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Create">
     <a href="{% url 'trips:trip_list' %}">Cancel</a>
 </form>
+
+{% endblock %}

@@ -1,6 +1,14 @@
+{% extends 'base.html' %}
+
+{% block page_title %}Edit trip{% endblock %}
+
+{% block content %}
+
 <h1>Update trip</h1>
 <form method="post">{% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Update">
     <a href="{% url 'trips:trip_list' %}">Cancel</a>
 </form>
+
+{% endblock %}
