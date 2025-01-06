@@ -13,6 +13,16 @@
     {% block extra_style %}{% endblock %}
   </head>
   <body>
+    <header>
+      <nav>
+        {% if request.user.is_authenticated %}
+          {% include 'logout_button.html' %}
+        {% else %}
+          <a href="{% url 'users:login' %}">Login</a>
+          {% comment %} TODO: <a href="{% url 'users:signup' %}">Signup</a> {% endcomment %}
+        {% endif %}
+      </nav>
+    </header>
     <main>
       {% block content %}{% endblock %}
     </main>
