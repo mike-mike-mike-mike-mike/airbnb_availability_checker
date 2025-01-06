@@ -1,5 +1,5 @@
 from django.contrib.auth.models import AbstractUser, BaseUserManager
-from django.db.models import EmailField
+from django.db import models, transaction
 from phonenumber_field.modelfields import PhoneNumberField
 
 
@@ -21,7 +21,7 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractUser):
-    email = EmailField(unique=True)
+    email = models.EmailField(unique=True)
     username = None
 
     phone = PhoneNumberField(blank=True, null=True)
@@ -30,3 +30,18 @@ class User(AbstractUser):
     REQUIRED_FIELDS = []
 
     objects = UserManager()
+
+    def save(self, *args, **kwargs):
+        with transaction.atomic():
+            super().save(*args, **kwargs)
+            if not hasattr(self, "usersetting"):
+                UserSetting.objects.create(user=self)
+
+
+class UserSetting(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    notification_emails = models.BooleanField(default=True)
+    notification_sms = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"User settings for '{self.user.email}'"
