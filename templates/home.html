@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+{% extends "base.html" %}
+  
+{% block content %}
+  <h1>Welcome to Airbnb Availability Checker</h1>
+  <h2>Keep tabs on that reservation that got away</h2>
+  <h3>And get notified if it becomes available, so you can jump on it</h3>
+
+  <a href="{% url 'users:login' %}">Log in</a>
+  <a href="#">Create my account</a>
+{% endblock %}
+
+{% block footer %}{% endblock %}

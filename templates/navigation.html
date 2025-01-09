@@ -1,0 +1,9 @@
+<nav>
+  <a href="{% url 'home' %}">Home</a>
+  {% if request.user.is_authenticated %}
+    {% include 'logout_button.html' %}
+  {% else %}
+    <a href="{% url 'users:login' %}">Log in</a>
+    <a href="#">Sign up</a>
+  {% endif %}
+</nav>

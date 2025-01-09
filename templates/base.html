@@ -14,19 +14,16 @@
   </head>
   <body>
     <header>
-      <nav>
-        {% if request.user.is_authenticated %}
-          {% include 'logout_button.html' %}
-        {% else %}
-          <a href="{% url 'users:login' %}">Login</a>
-          {% comment %} TODO: <a href="{% url 'users:signup' %}">Signup</a> {% endcomment %}
-        {% endif %}
-      </nav>
+      {% include 'navigation.html' %}
     </header>
     <main>
       {% block content %}{% endblock %}
     </main>
     <footer>
+      {% block footer %}
+        {% comment %} TODO: add buymeacoffee link? {% endcomment %}
+        {% comment %} <p><a href="#">Buy Me a Coffee</a></p> {% endcomment %}
+      {% endblock %}
       <p>&copy; 2025 Lambo</p>
     </footer>
   </body>
