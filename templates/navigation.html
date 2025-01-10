@@ -4,6 +4,6 @@
     {% include 'logout_button.html' %}
   {% else %}
     <a href="{% url 'users:login' %}">Log in</a>
-    <a href="#">Sign up</a>
+    <a href="{% url 'users:signup' %}">Sign up</a>
   {% endif %}
 </nav>
