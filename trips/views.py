@@ -1,17 +1,25 @@
 from django.views import generic
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import never_cache
 
 from .models import Trip
 from .forms import TripForm
 from users.models import User
 
 
-class IndexView(generic.ListView):
+@method_decorator(never_cache, name="dispatch")
+class BaseTripView(LoginRequiredMixin):
+    pass
+
+
+class IndexView(BaseTripView, generic.ListView):
     def get_queryset(self):
         # TODO: filter by user once logging in is implemented
         return Trip.objects.order_by("-id")[:5]
 
 
-class CreateView(generic.CreateView):
+class CreateView(BaseTripView, generic.CreateView):
     model = Trip
     form_class = TripForm
     template_name = "trips/new.html"
@@ -23,12 +31,12 @@ class CreateView(generic.CreateView):
         return super().form_valid(form)
 
 
-class DetailsView(generic.DetailView):
+class DetailsView(BaseTripView, generic.DetailView):
     # TODO: 403 if user is not the owner of the trip
     model = Trip
 
 
-class UpdateView(generic.UpdateView):
+class UpdateView(BaseTripView, generic.UpdateView):
     model = Trip
     form_class = TripForm
     template_name = "trips/edit.html"
