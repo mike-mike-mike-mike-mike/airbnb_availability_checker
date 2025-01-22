@@ -161,9 +161,12 @@ cython_debug/
 
 # macOS specific
 .DS_Store
+
+# Environment variables
+.env
+
 src/data/results.csv
 src/data/log.txt
 TODO.txt
-.DS_Store
 **/scratch.py
 _scratches
