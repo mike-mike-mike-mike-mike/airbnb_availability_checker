@@ -6,7 +6,7 @@ from django.contrib.auth.views import (
     PasswordResetCompleteView,
 )
 
-from .views import LoginView, LogoutView, signup
+from users.views import LoginView, LogoutView, signup, profile
 
 app_name = "users"
 urlpatterns = [
@@ -17,6 +17,7 @@ urlpatterns = [
     ),
     path("auth/logout/", LogoutView.as_view(), name="logout"),
     path("signup/", signup, name="signup"),
+    path("me/", profile, name="profile"),
     path(
         "auth/reset_password/",
         PasswordResetView.as_view(

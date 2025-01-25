@@ -2,6 +2,7 @@
   <a href="{% url 'home' %}">Home</a>
   {% if request.user.is_authenticated %}
     {% include 'logout_button.html' %}
+    <a href="{% url 'users:profile' %}">Profile</a>
   {% else %}
     <a href="{% url 'users:login' %}">Log in</a>
     <a href="{% url 'users:signup' %}">Sign up</a>

@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 
-from .models import User
+from users.models import User, UserSetting
 
 
 class UserRegisterForm(UserCreationForm):
@@ -12,3 +12,23 @@ class UserRegisterForm(UserCreationForm):
     class Meta:
         model = User
         fields = ["first_name", "last_name", "email", "password1", "password2"]
+
+
+class UserUpdateForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ["first_name", "last_name", "phone"]
+
+
+class UserSettingsForm(forms.ModelForm):
+    class Meta:
+        model = UserSetting
+        fields = ["notification_emails", "notification_sms"]
+        labels = {
+            "notification_emails": "Receive email notifications",
+            "notification_sms": "Receive text notifications (phone number required)",
+        }
+        widgets = {
+            "notification_emails": forms.CheckboxInput(),
+            "notification_sms": forms.CheckboxInput(),
+        }

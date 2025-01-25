@@ -34,12 +34,13 @@ class User(AbstractUser):
     def save(self, *args, **kwargs):
         with transaction.atomic():
             super().save(*args, **kwargs)
-            if not hasattr(self, "usersetting"):
-                UserSetting.objects.create(user=self)
+            UserSetting.objects.get_or_create(user=self)
 
 
 class UserSetting(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, related_name="user_settings"
+    )
     notification_emails = models.BooleanField(default=True)
     notification_sms = models.BooleanField(default=False)
 

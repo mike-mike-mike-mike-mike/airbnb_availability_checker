@@ -1,12 +1,15 @@
+from django.contrib import messages
 from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import (
     LoginView as AuthLoginView,
     LogoutView as AuthLogoutView,
 )
-from django.contrib import messages
 from django.shortcuts import redirect, render
+from django.db import transaction
 
-from users.forms import UserRegisterForm
+from users.forms import UserRegisterForm, UserUpdateForm, UserSettingsForm
+from users.models import UserSetting
 
 
 class LoginView(AuthLoginView):
@@ -43,3 +46,36 @@ def signup(request):
             return redirect("trips:trip_list")
         else:
             return render(request, "signup.html", {"form": form})
+
+
+@login_required
+def profile(request):
+    user_settings, _ = UserSetting.objects.get_or_create(user=request.user)
+
+    if request.method == "GET":
+        user_form = UserUpdateForm(instance=request.user)
+        user_settings_form = UserSettingsForm(instance=user_settings)
+        return render(
+            request,
+            "profile.html",
+            {"user_form": user_form, "user_settings_form": user_settings_form},
+        )
+
+    if request.method == "POST":
+        user_form = UserUpdateForm(request.POST, instance=request.user)
+        user_settings_form = UserSettingsForm(request.POST, instance=user_settings)
+
+        if user_form.is_valid() and user_settings_form.is_valid():
+            # attempt to update both models in a transaction
+            with transaction.atomic():
+                user_form.save()
+                user_settings_form.save()
+
+            messages.success(request, "Your profile has been updated successfully.")
+            return redirect("users:profile")
+        else:
+            return render(
+                request,
+                "profile.html",
+                {"user_form": user_form, "user_settings_form": user_settings_form},
+            )
