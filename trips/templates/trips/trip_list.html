@@ -6,15 +6,22 @@
 
 <h1>My Trips</h1>
 {% if trip_list %}
-    <ul>
+    <ul class="list-group">
     {% for trip in trip_list %}
-        <li><a href="{% url 'trips:edit_trip' trip.id %}">{{ trip.trip_id }}</a></li>
+        <a href="{% url 'trips:edit_trip' trip.id %}" class="list-group-item">
+            <col class="col">
+            {{ trip.room_id }}
+            </col>
+            <col class="col">
+            {{ trip.check_in }} - {{ trip.check_out }}
+            </col>
+        </a>
     {% endfor %}
     </ul>
 {% else %}
     <p>No saved trips.</p>
 {% endif %}
 
-<a href="{% url 'trips:new_trip' %}">Add a trip</a>
+<a href="{% url 'trips:new_trip' %}" class="btn btn-primary">Add a trip</a>
 
 {% endblock %}

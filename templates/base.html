@@ -3,9 +3,10 @@
 
 <html lang="en">
   <head>
-    <title>
-      {% block page_title %}Airbnb Availability Checker{% endblock %}
-    </title>
+    <title>{% block page_title %}Airbnb Availability Checker{% endblock %}</title>
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% block extra_head %}{% endblock %}

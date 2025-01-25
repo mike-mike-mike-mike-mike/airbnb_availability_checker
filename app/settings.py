@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "trips",
     "users",
     "phonenumber_field",
+    "bootstrap5",
 ]
 
 MIDDLEWARE = [
