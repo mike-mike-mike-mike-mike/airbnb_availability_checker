@@ -27,6 +27,12 @@
     <p>No saved trips.</p>
 {% endif %}
 
-<a href="{% url 'trips:new_trip' %}" class="btn btn-primary mt-4">Add a trip</a>
+<div class="d-flex mt-4">
+    <a href="{% url 'trips:new_trip' %}" class="btn btn-primary me-1">Add a trip</a>
+    <form method="post" action="{% url 'trips:check_trips' %}">
+        {% csrf_token %}
+        <input type="submit" value="Check trips now" class="btn btn-success">
+    </form>
+</div>
 
 {% endblock %}
