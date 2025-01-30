@@ -9,12 +9,17 @@
     <ul class="list-group">
     {% for trip in trip_list %}
         <a href="{% url 'trips:edit_trip' trip.id %}" class="list-group-item">
-            <col class="col">
-            {{ trip.room_id }}
-            </col>
-            <col class="col">
-            {{ trip.check_in }} - {{ trip.check_out }}
-            </col>
+            <div class="row">
+                <div class="col">
+                    Room# {{ trip.room_id }}
+                </div>
+                <div class="col">
+                    {{ trip.check_in }} - {{ trip.check_out }}
+                </div>
+                <div class="col-auto ml-auto">
+                    {% if trip.available %} <span class="badge bg-success">Available</span> {% else %} <span class="badge bg-danger">Unavailable</span> {% endif %}
+                </div>
+            </div>
         </a>
     {% endfor %}
     </ul>
@@ -22,6 +27,6 @@
     <p>No saved trips.</p>
 {% endif %}
 
-<a href="{% url 'trips:new_trip' %}" class="btn btn-primary">Add a trip</a>
+<a href="{% url 'trips:new_trip' %}" class="btn btn-primary mt-4">Add a trip</a>
 
 {% endblock %}

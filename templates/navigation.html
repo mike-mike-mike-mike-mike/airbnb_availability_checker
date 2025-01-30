@@ -1,22 +1,12 @@
-<nav>
-  <ul class="nav bg-primary">
-    <li class="nav-item">
-      <a href="{% url 'home' %}" class="nav-link link-light">Home</a>
-    </li>
+<nav class="navbar navbar-light bg-light">
+    <a href="{% url 'home' %}" class="nav-link">Home</a>
+    <div class="d-flex flex-row">
     {% if request.user.is_authenticated %}
-      <li class="nav-item">
-        {% include 'logout_button.html' %}
-      </li>
-      <li class="nav-item">
-        <a href="{% url 'users:profile' %}" class="nav-link link-light">Profile</a>
-      </li>
-  {% else %}
-    <li class="nav-item">
-      <a href="{% url 'users:login' %}" class="nav-link link-light">Log in</a>
-    </li>
-    <li class="nav-item">
-    <a href="{% url 'users:signup' %}" class="nav-link link-light">Sign up</a>
-    </li>
-  {% endif %}
-  </ul>
+      {% include 'logout_button.html' %}
+      <a href="{% url 'users:profile' %}" class="nav-link">Profile</a>
+    {% else %}
+      <a href="{% url 'users:login' %}" class="nav-link">Log in</a>
+      <a href="{% url 'users:signup' %}" class="nav-link">Sign up</a>
+    {% endif %}
+    </div>
 </nav>
